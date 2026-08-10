@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- TODO: финальные метатеги перед запуском рекламы (раздел 6 BUSINESS-LOGIC.md) -->
+  <title>Pre-Send Check — catch what kills your proposal before you send it</title>
+  <meta name="description" content="A Chrome extension that checks your freelance proposal before you send it: unreplaced placeholders, AI clichés, and phrases that break platform rules.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pre-Send Check — green light before you send">
+  <meta property="og:description" content="Catch unreplaced placeholders, AI clichés, and platform-rule risks before the client sees them.">
+  <!-- TODO: og:image 1200×630 webp, og:url -->
+
+  <link rel="icon" href="data:,"><!-- TODO: favicon -->
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+
+<!-- ==================== 1. HERO ==================== -->
+<header class="hero">
+  <div class="container hero__inner">
+    <p class="eyebrow">Chrome extension · in development</p>
+    <h1 class="hero__title">Get a green light before you hit send</h1>
+    <p class="hero__subtitle">
+      <!-- TODO copy: боль конкретнее — «отправил с чужим именем в шапке, потерял заказ» -->
+      One proposal with the previous client's name in the greeting is enough to lose the job.
+      Pre-Send Check reads your proposal before the client does.
+    </p>
+    <button type="button" class="button button--primary button--lg" data-open-modal="hero">
+      Get early access
+    </button>
+    <p class="hero__note">No account, no card. We email you once, at launch.</p>
+  </div>
+</header>
+
+<!-- ==================== 2. DEMO ==================== -->
+<section class="section demo" data-demo aria-labelledby="demo-heading">
+  <div class="container">
+    <h2 class="section__title" id="demo-heading">See it on a real proposal</h2>
+    <p class="section__lead">
+      Three example proposals, three verdicts. Pick one and run the check.
+    </p>
+
+    <div class="demo__tabs" role="tablist" aria-label="Example proposals" data-demo-tabs></div>
+
+    <div class="demo__window">
+      <div class="demo__pane demo__pane--text">
+        <div class="demo__pane-head">
+          <span class="demo__badge">Example proposal</span>
+        </div>
+        <div class="demo__text-wrap">
+          <pre class="demo__text" data-demo-text></pre>
+          <div class="demo__scanline" data-demo-scanline aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <div class="demo__pane demo__pane--panel">
+        <div class="demo__pane-head">
+          <span class="demo__pane-title">Pre-Send Check</span>
+        </div>
+
+        <div class="light" data-demo-light>
+          <span class="light__dot light__dot--red"></span>
+          <span class="light__dot light__dot--yellow"></span>
+          <span class="light__dot light__dot--green"></span>
+        </div>
+        <p class="light__caption" data-demo-caption role="status" aria-live="polite"></p>
+
+        <button type="button" class="button button--primary demo__run" data-demo-run>
+          Check before sending
+        </button>
+
+        <ul class="issues" data-demo-issues></ul>
+        <p class="demo__hint" data-demo-hint hidden>Tap an issue to see the fix.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 3. CATEGORIES ==================== -->
+<section class="section" aria-labelledby="categories-heading">
+  <div class="container">
+    <h2 class="section__title" id="categories-heading">What it catches</h2>
+    <div class="cards">
+      <article class="card">
+        <span class="card__icon" aria-hidden="true">⬚</span>
+        <h3 class="card__title">Unreplaced placeholders</h3>
+        <p class="card__text">
+          <!-- TODO copy -->
+          <code>[Client Name]</code>, <code>[Your Rate]</code>, <code>XX%</code>, and the previous
+          client's name still sitting in the greeting. Always blocking.
+        </p>
+      </article>
+      <article class="card">
+        <span class="card__icon" aria-hidden="true">⌁</span>
+        <h3 class="card__title">AI clichés</h3>
+        <p class="card__text">
+          <!-- TODO copy -->
+          “I hope this message finds you well”, “In today's fast-paced world”, “Let's delve into”.
+          Clients read these twenty times a day. Always a warning.
+        </p>
+      </article>
+      <article class="card">
+        <span class="card__icon" aria-hidden="true">⚠</span>
+        <h3 class="card__title">Platform-rule risks</h3>
+        <p class="card__text">
+          <!-- TODO copy -->
+          Anything that moves the client off-platform or to direct payment. Suspension risk, so
+          always blocking.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 4. HOW IT WORKS ==================== -->
+<section class="section section--muted" aria-labelledby="how-heading">
+  <div class="container">
+    <h2 class="section__title" id="how-heading">How it works</h2>
+    <ol class="steps">
+      <li class="step">
+        <span class="step__num">1</span>
+        <h3 class="step__title">Install the extension</h3>
+        <p class="step__text">One click in the Chrome Web Store. Nothing to configure.</p>
+      </li>
+      <li class="step">
+        <span class="step__num">2</span>
+        <h3 class="step__title">Write your proposal as usual</h3>
+        <p class="step__text">Upwork, Fiverr, Contra, or your own email draft.</p>
+      </li>
+      <li class="step">
+        <span class="step__num">3</span>
+        <h3 class="step__title">Check before sending</h3>
+        <p class="step__text">One button. Green, yellow, or red, with the exact lines to fix.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ==================== 5. WHO IT'S FOR ==================== -->
+<section class="section" aria-labelledby="who-heading">
+  <div class="container">
+    <h2 class="section__title" id="who-heading">Who it's for</h2>
+    <p class="section__lead section__lead--wide">
+      <!-- TODO copy -->
+      Freelancers who send proposals every day — on Upwork, Fiverr and Contra, or straight to a
+      client's inbox. If you reuse a template, this is for you.
+    </p>
+  </div>
+</section>
+
+<!-- ==================== 6. FINAL CTA ==================== -->
+<section class="section section--cta" aria-labelledby="cta-heading">
+  <div class="container">
+    <h2 class="section__title" id="cta-heading">Stop losing jobs to typos you didn't see</h2>
+    <button type="button" class="button button--primary button--lg" data-open-modal="footer">
+      Get early access
+    </button>
+  </div>
+</section>
+
+<!-- ==================== 7. FOOTER ==================== -->
+<footer class="footer">
+  <div class="container footer__inner">
+    <p class="footer__brand">Pre-Send Check</p>
+    <nav class="footer__links">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+    </nav>
+  </div>
+</footer>
+
+<!-- ==================== MODAL: email → price ==================== -->
+<div class="modal" data-modal hidden>
+  <div class="modal__backdrop" data-modal-close></div>
+
+  <div class="modal__dialog" data-modal-dialog role="dialog" aria-modal="true"
+       aria-labelledby="modal-title">
+    <button type="button" class="modal__close" data-modal-close aria-label="Close">×</button>
+
+    <!-- Состояние 1: форма -->
+    <div data-view="form">
+      <h2 class="modal__title" id="modal-title">Get early access</h2>
+      <p class="modal__text">
+        The extension isn't launched yet. Leave your email and we'll write to you when access
+        opens — one email, nothing else.
+      </p>
+
+      <form class="lead" data-lead-form novalidate>
+        <label class="lead__label" for="lead-email">Email</label>
+        <input class="lead__input" id="lead-email" type="email" name="email"
+               autocomplete="email" placeholder="you@example.com" data-lead-email required>
+        <p class="lead__error" data-lead-error role="alert" hidden></p>
+        <button type="submit" class="button button--primary button--full" data-lead-submit>
+          Get early access
+        </button>
+        <p class="lead__legal">
+          We store your email to notify you at launch. See our
+          <a href="privacy.html">privacy notice</a>.
+        </p>
+      </form>
+    </div>
+
+    <!-- Состояние 2: экран цены. Вторая целевая метрика. -->
+    <div data-view="price" hidden>
+      <h2 class="modal__title">You're on the list</h2>
+      <p class="price__amount">$12<span class="price__period">/month</span></p>
+      <p class="modal__text">
+        Early-bird: the first users get their first 3 months at half price. No card now — we'll
+        send the link before launch.
+      </p>
+      <button type="button" class="button button--primary button--full" data-price-cta>
+        Lock in early-bird price
+      </button>
+      <p class="price__done" data-price-done hidden>
+        Thanks — you're on the list. We'll email you before launch.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== COOKIE BANNER ==================== -->
+<div class="cookie" data-cookie-banner hidden role="region" aria-label="Cookie notice">
+  <p class="cookie__text">
+    We use analytics cookies to see how many people find this page useful.
+    <a href="privacy.html">Details</a>.
+  </p>
+  <div class="cookie__actions">
+    <button type="button" class="button button--ghost" data-consent="denied">Essential only</button>
+    <button type="button" class="button button--primary" data-consent="granted">Accept</button>
+  </div>
+</div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/analytics.js"></script>
+<script src="assets/js/demo-data.js"></script>
+<script src="assets/js/demo.js"></script>
+<script src="assets/js/lead.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

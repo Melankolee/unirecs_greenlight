@@ -1,0 +1,15 @@
+Hi Priya,
+
+You need the onboarding emails rewritten because activation drops after day two. I have done
+this for two SaaS products with a similar drop, and in both cases the fix was cutting the
+welcome sequence from six emails to three.
+
+How I would work: read your current sequence and the day-two data, rewrite three emails, then
+hand over a short doc on what to test next. About a week.
+
+Rate is $1,800 for the rewrite. Two revision rounds included.
+
+One question before I start: do you have access to open and click rates per email, or only the
+aggregate?
+
+Sam
