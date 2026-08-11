@@ -40,7 +40,8 @@
   <div class="container">
     <h2 class="section__title" id="demo-heading">See it on a real proposal</h2>
     <p class="section__lead">
-      Three example proposals, three verdicts. Pick one and run the check.
+      Three example proposals, three verdicts. Run the check, then fix the wording in one click —
+      the blanks it leaves to you on purpose.
     </p>
 
     <div class="demo__tabs" role="tablist" aria-label="Example proposals" data-demo-tabs></div>
@@ -68,12 +69,26 @@
         </div>
         <p class="light__caption" data-demo-caption role="status" aria-live="polite"></p>
 
-        <button type="button" class="button button--primary demo__run" data-demo-run>
-          Check before sending
-        </button>
+        <div class="demo__actions">
+          <button type="button" class="button button--primary demo__run" data-demo-run>
+            Check before sending
+          </button>
+          <!-- Чинит только то, где расширение знает, как надо: формулировки и риск блокировки.
+               Плейсхолдеры не трогает — см. раздел 2.6 BUSINESS-LOGIC.md. -->
+          <button type="button" class="button button--ghost demo__fix-errors" data-demo-fix-errors hidden>
+            Fix errors
+          </button>
+          <!-- Единственный способ откатить применённые исправления. -->
+          <button type="button" class="demo__reset" data-demo-reset hidden>
+            Reset to the original text
+          </button>
+        </div>
 
         <ul class="issues" data-demo-issues></ul>
-        <p class="demo__hint" data-demo-hint hidden>Tap an issue to see the fix.</p>
+        <p class="demo__hint" data-demo-hint hidden>
+          Tap an issue to see the fix. Wording and rule problems are fixed for you;
+          blanks only you can fill.
+        </p>
       </div>
     </div>
   </div>
@@ -233,11 +248,29 @@
   </div>
 </div>
 
+<!-- ==================== STICKY EMAIL BAR ==================== -->
+<div class="sticky" data-sticky hidden>
+  <div class="container sticky__inner">
+    <div class="sticky__copy">
+      <p class="sticky__title" data-sticky-title>Get the extension when it launches</p>
+      <p class="sticky__note">One email at launch. No account, no spam.</p>
+    </div>
+    <form class="sticky__form" data-sticky-form novalidate>
+      <input class="sticky__input" type="email" data-sticky-email
+             placeholder="you@example.com" aria-label="Email" autocomplete="email" required>
+      <button type="submit" class="button button--primary" data-sticky-submit>Get early access</button>
+    </form>
+    <p class="sticky__error" data-sticky-error role="alert" hidden></p>
+    <button type="button" class="sticky__close" data-sticky-close aria-label="Close">×</button>
+  </div>
+</div>
+
 <script src="assets/js/config.js"></script>
 <script src="assets/js/analytics.js"></script>
 <script src="assets/js/demo-data.js"></script>
 <script src="assets/js/demo.js"></script>
 <script src="assets/js/lead.js"></script>
+<script src="assets/js/sticky.js"></script>
 <script src="assets/js/app.js"></script>
 </body>
 </html>

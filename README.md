@@ -59,9 +59,14 @@ assets/css/main.css     токены + все компоненты
 assets/js/config.js     API_ENDPOINT, GA ID, одноразовые домены, тайминги
 assets/js/analytics.js  consent, gtag, track(), utm/gclid, scroll_depth
 assets/js/demo-data.js  три примера предложений + самопроверка
-assets/js/demo.js       демо: состояния, подсветка по match, светофор
+assets/js/demo.js       демо: состояния, подсветка по match, светофор, исправления по кнопке
 assets/js/lead.js       модалка, валидация, POST /api/lead, экран цены
 assets/js/app.js        сборка и инициализация
+
+assets/js/sticky.js     липкая полоса сбора email внизу вьюпорта
+
+server/lead-api.js      прод-обработчик POST /api/lead (Node, без зависимостей)
+server/*.service, *.conf systemd + nginx, установка — server/README.md
 
 tools/dev-server.js     статика + мок POST /api/lead
 tools/check.js          CLI-прогон текста предложения
@@ -69,10 +74,18 @@ tools/rules.js          правила детекции — только для 
 examples/*.txt          тексты для прогона
 ```
 
+## Прод
+
+Деплой и проверка эндпоинта — [server/README.md](server/README.md). Схема: nginx отдаёт статику и
+проксирует единственный маршрут `/api/lead` на локальный node-процесс, лиды пишутся в
+`/var/lib/presend/leads.jsonl`. API на том же домене, поэтому `apiEndpoint` в конфиге остаётся
+`/api/lead` и фронт для прода не правится.
+
 ## Перед запуском рекламы
 
-- [ ] `assets/js/config.js`: заполнить `gaMeasurementId` и `apiEndpoint`
-- [ ] `/api/lead` на бэкенде, отвечает `200 {ok: true}`
+- [ ] `assets/js/config.js`: заполнить `gaMeasurementId` (`apiEndpoint` менять не нужно)
+- [x] `/api/lead` на бэкенде, отвечает `200 {ok: true}` — [server/](server/), развернуть по инструкции
+- [ ] Consent Mode v2 в `analytics.js` — иначе конверсии отказавшихся от cookie не доходят до Ads
 - [ ] Юридические тексты в `privacy.html` и `terms.html`
 - [ ] favicon, `og:image`, `og:url` в `index.html`
 - [ ] `email_submit` и `price_cta_click` заведены как конверсии в Google Ads
@@ -83,3 +96,13 @@ examples/*.txt          тексты для прогона
 Тексты и проблемы — в [assets/js/demo-data.js](assets/js/demo-data.js). Подсветка строится
 программно по полю `match`, разметку в текст не вставлять. Цвет светофора считается из
 `issues`, поле `verdict` — только самопроверка: расхождение печатается в консоль на localhost.
+
+Исправления: у issue либо `replacement` (текст, на который меняется `match` по кнопке), либо
+`manual` (строка о том, почему кнопки нет) — ровно одно из двух. Граница простая: **клише и увод
+с площадки чиним, плейсхолдеры не трогаем.** Настоящее имя клиента и настоящую цифру знает только
+автор; подставить туда правдоподобное значение — соврать за него в письме, которое уйдёт клиенту.
+Поэтому у `category: "placeholder"` `replacement` быть не может, и `rushed` после кнопки
+`Fix 2 errors` остаётся красным — это ожидаемый итог, он зашит полем `verdictAfterFixes`.
+
+`validateDemoData()` проверяет всё перечисленное плюс то, что `replacement` не втягивает в текст
+`match` другой issue. Подробности — раздел 2.6 [BUSINESS-LOGIC.md](BUSINESS-LOGIC.md).

@@ -1,0 +1,41 @@
+[Unit]
+Description=Pre-Send Check — lead API (POST /api/lead)
+Documentation=file:///opt/presend/server/README.md
+After=network.target
+
+[Service]
+Type=simple
+User=presend
+Group=presend
+
+# Путь до распакованного репозитория на сервере. Поправить, если кладёте не в /opt/presend.
+WorkingDirectory=/opt/presend
+ExecStart=/usr/bin/node /opt/presend/server/lead-api.js
+
+Environment=PORT=8787
+Environment=HOST=127.0.0.1
+Environment=LEADS_FILE=/var/lib/presend/leads.jsonl
+# Раскомментировать, только если лендинг отдаётся с другого домена, чем API.
+# Environment=ALLOWED_ORIGIN=https://example.com
+
+Restart=always
+RestartSec=2
+
+# Процесс держит один файл с лидами и слушает localhost — больше ему ничего не нужно.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/presend
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6
+RestrictSUIDSGID=true
+LockPersonality=true
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=presend-lead
+
+[Install]
+WantedBy=multi-user.target
