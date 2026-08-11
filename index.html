@@ -21,17 +21,117 @@
 <!-- ==================== 1. HERO ==================== -->
 <header class="hero">
   <div class="container hero__inner">
-    <p class="eyebrow">Chrome extension · in development</p>
-    <h1 class="hero__title">Get a green light before you hit send</h1>
-    <p class="hero__subtitle">
-      <!-- TODO copy: боль конкретнее — «отправил с чужим именем в шапке, потерял заказ» -->
-      One proposal with the previous client's name in the greeting is enough to lose the job.
-      Pre-Send Check reads your proposal before the client does.
-    </p>
-    <button type="button" class="button button--primary button--lg" data-open-modal="hero">
-      Get early access
-    </button>
-    <p class="hero__note">No account, no card. We email you once, at launch.</p>
+    <div class="hero__copy">
+      <p class="eyebrow">Chrome extension · in development</p>
+      <h1 class="hero__title">Get a green light before you hit send</h1>
+      <p class="hero__subtitle">
+        <!-- TODO copy: боль конкретнее — «отправил с чужим именем в шапке, потерял заказ» -->
+        One proposal with the previous client's name in the greeting is enough to lose the job.
+        Pre-Send Check reads your proposal before the client does.
+      </p>
+      <button type="button" class="button button--primary button--lg" data-open-modal="hero">
+        Get early access
+      </button>
+      <p class="hero__note">No account, no card. We email you once, at launch.</p>
+    </div>
+
+    <!-- Показ продукта на первом экране: строка из черновика → вердикт → готовая замена.
+         Три состояния светофора идут по кругу, тексты переключаются вместе с цветом.
+
+         Все три лежат в разметке и наложены друг на друга в одной ячейке грида: высота
+         карточки равна самому высокому состоянию, поэтому при переключении ничего не прыгает.
+         Строк в JS нет — hero.js только переставляет активное состояние.
+
+         Тексты взяты из demo-data.js (rushed i4, rushed i2, clean i1): карточка не должна
+         обещать больше, чем показывает демо ниже.
+         Ниже 900px скрыта — верх демо обязан попадать в фолд (BUSINESS-LOGIC.md §3). -->
+    <aside class="showcase" data-showcase data-verdict="red">
+      <div class="showcase__body">
+
+        <article class="showcase__state" data-state="red">
+          <div class="showcase__block">
+            <p class="showcase__label">What you wrote</p>
+            <p class="showcase__text">
+              To keep things simple, email me directly at alex.works@gmail.com and we can sort
+              out the details there.
+            </p>
+          </div>
+          <p class="showcase__verdict">Platform rules</p>
+          <p class="showcase__note">
+            Sharing contact details before a contract breaks the terms of every major
+            marketplace. Accounts get suspended for this.
+          </p>
+          <div class="showcase__block">
+            <p class="showcase__label">Send this instead</p>
+            <p class="showcase__text showcase__text--bright">
+              Happy to answer anything right here in the chat.
+            </p>
+          </div>
+        </article>
+
+        <article class="showcase__state" data-state="yellow">
+          <div class="showcase__block">
+            <p class="showcase__label">What you wrote</p>
+            <p class="showcase__text">
+              I hope this message finds you well. I saw your job post and I think I'm a great fit.
+            </p>
+          </div>
+          <p class="showcase__verdict">AI cliché</p>
+          <p class="showcase__note">
+            Clients see this exact sentence dozens of times a day. It signals a mass send.
+          </p>
+          <div class="showcase__block">
+            <p class="showcase__label">Send this instead</p>
+            <p class="showcase__text showcase__text--bright">
+              Your post says signups stall right after the trial email — that's the part I'd
+              start with.
+            </p>
+          </div>
+        </article>
+
+        <!-- Зелёное состояние структурно то же, но замены нет: у мягкого замечания в данных
+             нет replacement, и обещать кнопку «исправить» здесь было бы неправдой. -->
+        <article class="showcase__state" data-state="green">
+          <div class="showcase__block">
+            <p class="showcase__label">What you wrote</p>
+            <p class="showcase__text">
+              How I would work: read your current sequence and the day-two data, rewrite three
+              emails, then hand over a short doc on what to test next.
+            </p>
+          </div>
+          <p class="showcase__verdict">Good to go</p>
+          <p class="showcase__note">
+            Nothing wrong here — this reads like a person. The process paragraph could be one
+            line shorter.
+          </p>
+          <div class="showcase__block">
+            <p class="showcase__label">Nothing to fix</p>
+            <p class="showcase__text showcase__text--bright">Optional. Send as is.</p>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Светофор стоит рядом с карточкой, а не внутри неё. Сигнал несёт он, поэтому
+           в строке вердикта своей точки нет.
+
+           Лампы — кнопки: по ним переключают состояние руками. Первый же ручной выбор
+           останавливает автопрокрутку насовсем, иначе она перебила бы выбор через 3.4 с. -->
+      <div class="showcase__light" role="group" aria-label="Example verdict">
+        <button type="button" class="showcase__dot showcase__dot--red"
+                data-pick="red" aria-label="Show a blocking example">
+          <span class="showcase__lamp"></span>
+        </button>
+        <button type="button" class="showcase__dot showcase__dot--yellow"
+                data-pick="yellow" aria-label="Show a warning example">
+          <span class="showcase__lamp"></span>
+        </button>
+        <button type="button" class="showcase__dot showcase__dot--green"
+                data-pick="green" aria-label="Show a clean example">
+          <span class="showcase__lamp"></span>
+        </button>
+      </div>
+    </aside>
   </div>
 </header>
 
@@ -271,6 +371,7 @@
 
 <script src="assets/js/config.js"></script>
 <script src="assets/js/analytics.js"></script>
+<script src="assets/js/hero.js"></script>
 <script src="assets/js/demo-data.js"></script>
 <script src="assets/js/demo.js"></script>
 <script src="assets/js/lead.js"></script>

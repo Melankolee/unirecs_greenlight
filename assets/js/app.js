@@ -33,6 +33,9 @@
     window.Analytics.captureAttribution();
     initCookieBanner();
 
+    if (window.Hero) {
+      window.Hero.init();
+    }
     if (window.Demo) {
       window.Demo.init();
     }

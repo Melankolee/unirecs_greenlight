@@ -15,6 +15,11 @@
   --paper:          #f8fafc;
   --paper-deep:     #eef2f6;
   --dark:           #111827;
+  /* Две ступени поверх --dark: карточка показа продукта и блоки внутри неё.
+     Проверено на --text-on-dark: 6.2:1 на raised, 6.7:1 на sunken. */
+  --dark-raised:    #171f2f;
+  --dark-sunken:    #0d1320;
+  --dark-border:    #252f42;
 
   --text:       #111827;
   --text-soft:  #6b7280;
@@ -205,10 +210,16 @@ code {
 .hero .eyebrow { color: var(--accent); }
 /* На тёмном только --text-on-dark: --text-soft/--text-faint дают здесь 3.6:1. */
 .hero__subtitle, .hero__note { color: var(--text-on-dark); }
-/* Колонка узкая, но ограничены дети, а не сам .container: max-width на контейнере
-   вместе с его margin: 0 auto центрировал hero и уводил его от левого края страницы. */
-.hero__inner { max-width: 1120px; }
-.hero__inner > * { max-width: 720px; }
+/* Две колонки: текст и показ продукта. Ограничена колонка, а не сам .container —
+   max-width на контейнере вместе с его margin: 0 auto центрировал hero и уводил
+   его от левого края страницы. */
+.hero__inner {
+  max-width: 1120px;
+  display: grid;
+  gap: clamp(28px, 4vw, 56px);
+  align-items: center;
+}
+.hero__copy { max-width: 720px; }
 .hero__title { font-size: clamp(34px, 5.2vw, 56px); margin-bottom: .35em; }
 .hero__subtitle {
   font-size: clamp(17px, 1.5vw, 19px);
@@ -216,6 +227,132 @@ code {
   margin-bottom: 26px;
 }
 .hero__note { font-size: 14px; margin: 14px 0 0; }
+
+/* Правая колонка hero: строка из черновика → вердикт → готовая замена.
+   Тот же разбор, что даёт демо ниже, — только статичный и на один случай. */
+@media (min-width: 900px) {
+  .hero__inner { grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); }
+}
+
+/* Карточка и светофор — два отдельных предмета в ряд. Светофор тянется на всю высоту
+   карточки (align-items по умолчанию stretch), поэтому высоту ему не задаём. */
+.showcase {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+}
+
+/* Сама карточка. Три состояния наложены в одну ячейку: её высота равна самому высокому
+   из них, поэтому переключение не двигает ни кнопку hero, ни границу первого экрана. */
+.showcase__body {
+  display: grid;
+  padding: 18px;
+  background: var(--dark-raised);
+  border: 1px solid var(--dark-border);
+  border-radius: var(--radius-lg);
+}
+.showcase__state {
+  grid-area: 1 / 1;
+  display: grid;
+  gap: 14px;
+  align-content: start;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .35s ease-out;
+}
+.showcase__state.is-active { opacity: 1; visibility: visible; }
+
+.showcase__block {
+  padding: 15px 17px;
+  background: var(--dark-sunken);
+  border: 1px solid var(--dark-border);
+  border-radius: var(--radius);
+}
+
+/* Моноширинный лейбл — единственное место на странице, где он несёт роль подписи к блоку. */
+.showcase__label {
+  margin: 0 0 9px;
+  font: 500 10.5px/1 var(--mono);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--text-on-dark);
+}
+
+.showcase__text { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--text-on-dark); }
+/* Замена — то, ради чего смотрят карточку: она ярче исходной строки. */
+.showcase__text--bright { color: var(--text-invert); }
+
+/* Цвет вердикта идёт от состояния. На тёмном берутся заливочные --red/--yellow/--accent,
+   а не текстовые --*-text: те затемнены под белый фон и здесь дают меньше контраста.
+   19px/680 — крупный текст по WCAG, порог 3:1; худшая пара (--red) даёт 4.4:1. */
+.showcase__verdict {
+  margin: 0;
+  font: 680 19px/1.25 var(--sans);
+  letter-spacing: -.01em;
+}
+.showcase[data-verdict="red"]    .showcase__verdict { color: var(--red); }
+.showcase[data-verdict="yellow"] .showcase__verdict { color: var(--yellow); }
+.showcase[data-verdict="green"]  .showcase__verdict { color: var(--accent); }
+
+/* Светофор справа. Вертикальный и мелкий: это указатель состояния, а не орган управления —
+   кликать по нему нечего, весь интерактив живёт в демо ниже. */
+/* Корпус по размеру ламп, а не по высоте карточки: растянутый на всю высоту, он давал
+   три мелкие точки на большом расстоянии — это читалось как индикаторы, а не как светофор.
+   Пропорция примерно 1:2.6 и лампы почти во всю ширину корпуса — как у настоящего.
+   Поверхность та же, что у карточки: стоя на --dark рядом с ней, он должен читаться
+   предметом того же ряда. */
+.showcase__light {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 16px;
+  background: var(--dark-raised);
+  border: 1px solid var(--dark-border);
+  border-radius: var(--radius-lg);
+}
+/* Лампа — кнопка. Область нажатия 44px, сама лампа 38px: отрицательный margin съедает
+   разницу, поэтому шаг ламп и ширина корпуса остаются прежними. */
+.showcase__dot {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: -3px;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.showcase__lamp {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--dark-border);
+  transition: background-color .35s, box-shadow .35s;
+}
+
+/* Наведение подкрашивает лампу её собственным цветом вполсилы — тем же токеном ореола.
+   Без этого погашенная лампа никак не показывает, что по ней вообще можно нажать. */
+.showcase__dot--red:hover    .showcase__lamp { background: var(--halo-red); }
+.showcase__dot--yellow:hover .showcase__lamp { background: var(--halo-yellow); }
+.showcase__dot--green:hover  .showcase__lamp { background: var(--halo-green); }
+
+.showcase[data-verdict="red"] .showcase__dot--red .showcase__lamp {
+  background: var(--red);
+  box-shadow: 0 0 0 7px var(--halo-red);
+}
+.showcase[data-verdict="yellow"] .showcase__dot--yellow .showcase__lamp {
+  background: var(--yellow);
+  box-shadow: 0 0 0 7px var(--halo-yellow);
+}
+.showcase[data-verdict="green"] .showcase__dot--green .showcase__lamp {
+  background: var(--green);
+  box-shadow: 0 0 0 7px var(--halo-green);
+}
+
+.showcase__note { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--text-on-dark); }
 
 .section { padding: clamp(40px, 5vw, 64px) 0; }
 
@@ -1032,6 +1169,11 @@ code {
    ============================================================ */
 
 @media (max-width: 899px) {
+  /* Показ продукта уходит: на узком экране он вытолкнул бы верх демо за фолд,
+     а демо обязано попадать на первый экран (BUSINESS-LOGIC.md §3). Тот же разбор
+     доступен ниже в самом демо, поэтому ничего уникального не теряется. */
+  .showcase { display: none; }
+
   .demo__window { grid-template-columns: 1fr; }
   .demo__pane--panel { border-left: 0; border-top: 1px solid var(--border); }
   .demo__text-wrap { max-height: 44vh; overflow-y: auto; }
