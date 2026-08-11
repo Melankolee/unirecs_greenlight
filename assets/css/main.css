@@ -205,7 +205,10 @@ code {
 .hero .eyebrow { color: var(--accent); }
 /* На тёмном только --text-on-dark: --text-soft/--text-faint дают здесь 3.6:1. */
 .hero__subtitle, .hero__note { color: var(--text-on-dark); }
-.hero__inner { max-width: 720px; }
+/* Колонка узкая, но ограничены дети, а не сам .container: max-width на контейнере
+   вместе с его margin: 0 auto центрировал hero и уводил его от левого края страницы. */
+.hero__inner { max-width: 1120px; }
+.hero__inner > * { max-width: 720px; }
 .hero__title { font-size: clamp(34px, 5.2vw, 56px); margin-bottom: .35em; }
 .hero__subtitle {
   font-size: clamp(17px, 1.5vw, 19px);
