@@ -1,5 +1,5 @@
 /* ============================================================
-   Pre-Send Check — лендинг. Вариант 1a: холодный синий, светлая тема.
+   Greenlight — лендинг Proposal Pre-Send Check. Палитра брендборда.
    Порядок: токены → база → утилиты → секции → демо → модалка → баннер →
             липкая полоса → длинный текст → адаптив → reduced-motion
 
@@ -9,56 +9,70 @@
    ============================================================ */
 
 :root {
-  /* --- Поверхности и текст. Тон холодный, две фоновые заливки на всю страницу. --- */
+  /* --- Поверхности и текст --- */
   --surface:        #ffffff;
-  --surface-sunken: #fbfcfe;
-  --paper:          #f4f7fb;
-  --paper-deep:     #e7edf5;
+  --surface-sunken: #fcfdfe;
+  --paper:          #f8fafc;
+  --paper-deep:     #eef2f6;
+  --dark:           #111827;
 
-  --text:       #101a26;
-  --text-soft:  #5a6b7d;
-  --text-faint: #7c8896;
-  --text-invert:#ffffff;
+  --text:       #111827;
+  --text-soft:  #6b7280;
+  --text-faint: #6b7280;
+  --text-invert:#f8fafc;
+  /* Только для текста на тёмной заливке: на белом даёт 2.5:1 и там запрещён. */
+  --text-on-dark: #9ca3af;
 
-  --border:      #dde5ee;
-  --border-soft: #e8eef6;
-  --border-firm: #cfd9e4;
+  --border:      #e2e8f0;
+  --border-soft: #eff3f7;
+  --border-firm: #cbd5e1;
 
-  /* --- Брендовый акцент. Синий намеренно: не читается как сигнал светофора. --- */
-  --accent:      #1f5fd0;
-  --accent-dark: #16408f;
-  --accent-soft: #f2f6fc;
-  --accent-dim:  #9dbcfb;
+  /* --- Брендовый зелёный. Работает заливкой, но НЕ цветом текста на светлом:
+     #22c55e на белом даёт 2.3:1. Для текста и ссылок — --accent-link. --- */
+  --accent:      #22c55e;
+  --accent-dark: #16a34a;
+  --accent-ink:  #052e16;   /* краска поверх зелёной заливки */
+  --accent-link: #15803d;   /* зелёный, пригодный для текста на светлом */
+  --accent-soft: #f1f5f9;
+  --accent-dim:  #86efac;   /* только на тёмном */
 
   /* --- Светофор. Зарезервированная семантика, вне вердикта не используется. --- */
-  --red:    #c2352a;
-  --yellow: #d99b1a;
-  --green:  #1f7a4d;
+  --red:    #ef4444;
+  --yellow: #eab308;
+  --green:  #22c55e;
 
   /* Тексты сигналов — отдельные токены: на белом нужен контраст ≥ 4.5:1. */
-  --red-text:    #a02b21;
-  --yellow-text: #8a5a00;
-  --green-text:  #1a6b43;
+  --red-text:    #dc2626;
+  --yellow-text: #a16207;
+  --green-text:  #15803d;
 
-  --dot-off: #dfe5ec;
+  --dot-off: #e5e7eb;
+
+  /* Подложка карточки вердикта — тонкий фон сигнала, текст поверх остаётся контрастным. */
+  --red-tint:    #fef2f2;
+  --red-edge:    #fecaca;
+  --yellow-tint: #fefce8;
+  --yellow-edge: #fde68a;
+  --green-tint:  #f0fdf4;
+  --green-edge:  #bbf7d0;
 
   /* --- Подсветка фрагментов. Читаемость важнее заметности: по ним читают. --- */
-  --hl-placeholder-bg:   #fdeecb;
-  --hl-placeholder-text: #3d2c00;
-  --hl-placeholder-line: #a86a00;
+  --hl-placeholder-bg:   #fef3c7;
+  --hl-placeholder-text: #78350f;
+  --hl-placeholder-line: #b45309;
 
-  --hl-ai-bg:   #e7ebf2;
-  --hl-ai-text: #1a2430;
-  --hl-ai-line: #97a3b1;
+  --hl-ai-bg:   #e5e7eb;
+  --hl-ai-text: #111827;
+  --hl-ai-line: #94a3b8;
 
-  --hl-tos-bg:   #fadbd6;
-  --hl-tos-text: #4a1410;
-  --hl-tos-line: #c2352a;
+  --hl-tos-bg:   #fee2e2;
+  --hl-tos-text: #7f1d1d;
+  --hl-tos-line: #ef4444;
 
-  /* Применённое исправление. Зелёный здесь — то же значение, что и у зелёного сигнала. */
-  --hl-fixed-bg:   #d9efe2;
-  --hl-fixed-text: #10301f;
-  --hl-fixed-line: #1f7a4d;
+  /* Применённое исправление. Зелёный здесь — тот же сигнал, что и у зелёного вердикта. */
+  --hl-fixed-bg:   #dcfce7;
+  --hl-fixed-text: #14532d;
+  --hl-fixed-line: #16a34a;
 
   /* --- Форма --- */
   --radius-sm: 7px;
@@ -66,15 +80,25 @@
   --radius-lg: 16px;
   --radius-pill: 999px;
 
-  --shadow-sm:   0 1px 2px rgba(16, 26, 38, .06);
-  --shadow:      0 1px 2px rgba(16, 26, 38, .05), 0 10px 26px rgba(16, 26, 38, .07);
-  --shadow-modal:0 20px 56px rgba(16, 26, 38, .28);
-  --shadow-up:   0 -6px 22px rgba(16, 26, 38, .09);
+  --shadow-sm:   0 1px 2px rgba(17, 24, 39, .06);
+  --shadow:      0 1px 2px rgba(17, 24, 39, .05), 0 10px 26px rgba(17, 24, 39, .07);
+  --shadow-modal:0 20px 56px rgba(17, 24, 39, .28);
+  --shadow-up:   0 -6px 22px rgba(17, 24, 39, .09);
 
-  --focus: 0 0 0 3px rgba(31, 95, 208, .28);
+  --focus: 0 0 0 3px rgba(34, 197, 94, .35);
+
+  /* Ореолы и полоса сканирования: те же цвета, что у токенов выше, но с альфой. */
+  --halo-red:    rgba(239, 68, 68, .18);
+  --halo-yellow: rgba(234, 179, 8, .2);
+  --halo-green:  rgba(34, 197, 94, .18);
+  --scan-soft:   rgba(34, 197, 94, .14);
+  --scan-firm:   rgba(34, 197, 94, .55);
+  --tint-red:    rgba(239, 68, 68, .14);
 
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  /* Inter — из брендборда. Подключать только самохостом: woff2 + font-display: swap.
+     Пока файла нет, стек падает на системный шрифт и страница не ждёт загрузки. */
+  --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 
   /* Высота липкой полосы: на неё же отодвигается футер, чтобы ссылки не закрывались. */
   --sticky-h: 104px;
@@ -97,7 +121,7 @@ h1, h2, h3 { line-height: 1.18; margin: 0 0 .5em; letter-spacing: -.02em; }
 h3 { letter-spacing: -.01em; }
 p { margin: 0 0 1em; }
 
-a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a { color: var(--accent-link); text-decoration-thickness: 1px; text-underline-offset: 2px; }
 a:hover { color: var(--accent-dark); }
 
 /* Один общий фокус на всё интерактивное, включая крестик модалки. */
@@ -141,7 +165,7 @@ code {
 
 .button--primary {
   background: var(--accent);
-  color: var(--text-invert);
+  color: var(--accent-ink);
   box-shadow: var(--shadow-sm);
 }
 .button--primary:hover:not(:disabled) { background: var(--accent-dark); }
@@ -171,21 +195,38 @@ code {
   margin: 0 0 18px;
 }
 
-/* Hero держим компактным: верх демо обязан попадать на первый экран. */
-.hero { padding: clamp(36px, 5vw, 56px) 0 clamp(24px, 3vw, 32px); }
+/* Hero держим компактным: верх демо обязан попадать на первый экран.
+   Hero и финальный CTA — тёмная заливка бренда, страница закрывается тем же фоном. */
+.hero {
+  padding: clamp(40px, 5vw, 64px) 0 clamp(48px, 6vw, 72px);
+  background: var(--dark);
+  color: var(--text-invert);
+}
+.hero .eyebrow { color: var(--accent); }
+/* На тёмном только --text-on-dark: --text-soft/--text-faint дают здесь 3.6:1. */
+.hero__subtitle, .hero__note { color: var(--text-on-dark); }
 .hero__inner { max-width: 720px; }
 .hero__title { font-size: clamp(34px, 5.2vw, 56px); margin-bottom: .35em; }
 .hero__subtitle {
   font-size: clamp(17px, 1.5vw, 19px);
-  color: var(--text-soft);
   max-width: 62ch;
   margin-bottom: 26px;
 }
-.hero__note { font-size: 14px; color: var(--text-faint); margin: 14px 0 0; }
+.hero__note { font-size: 14px; margin: 14px 0 0; }
 
 .section { padding: clamp(40px, 5vw, 64px) 0; }
-.section--muted { background: var(--paper); border-block: 1px solid var(--border); }
-.section--cta { text-align: center; padding: clamp(52px, 6vw, 80px) 0; }
+
+/* Фоновых заливок две на всю страницу: белая и --paper.
+   Paper отдан демо, финальный CTA закрывает страницу тёмным. */
+.demo { background: var(--paper); border-block: 1px solid var(--border); }
+.section--muted { background: var(--surface-sunken); }
+.section--cta {
+  text-align: center;
+  padding: clamp(56px, 6vw, 84px) 0;
+  background: var(--dark);
+  color: var(--text-invert);
+  border-block: 0;
+}
 .section__title { font-size: clamp(25px, 3vw, 34px); }
 .section__lead { color: var(--text-soft); max-width: 66ch; font-size: 16.5px; }
 .section__lead--wide { max-width: 72ch; font-size: 18px; }
@@ -210,8 +251,8 @@ code {
   width: 34px;
   height: 34px;
   border-radius: var(--radius-sm);
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
   font-size: 17px;
 }
 .card__title { font-size: 17.5px; margin: 14px 0 6px; }
@@ -239,7 +280,7 @@ code {
   height: 28px;
   border-radius: 50%;
   background: var(--accent);
-  color: var(--text-invert);
+  color: var(--accent-ink);
   font: 650 13px/1 var(--sans);
 }
 .step__title { font-size: 17px; margin: 13px 0 5px; }
@@ -334,15 +375,36 @@ code {
   vertical-align: middle;
 }
 
-.demo__badge {
-  font: 700 10.5px/1 var(--sans);
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--text-soft);
+/* Карточка-интро над текстом предложения: бейдж + пояснение, что это за текст. */
+.demo__pane--text .demo__pane-head {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 18px 18px 16px;
+  padding: 18px;
   background: var(--accent-soft);
   border: 1px solid var(--border);
-  border-radius: 5px;
-  padding: 5px 9px;
+  border-radius: var(--radius-lg);
+}
+.demo__pane-note {
+  margin: 0;
+  max-width: 56ch;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+
+.demo__badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: var(--accent);
+  border: 0;
+  border-radius: var(--radius-pill);
+  padding: 7px 12px;
 }
 
 .demo__text-wrap { position: relative; overflow: hidden; padding: 0 22px; }
@@ -367,8 +429,8 @@ code {
   pointer-events: none;
   background: linear-gradient(180deg,
               transparent,
-              rgba(31, 95, 208, .14) 55%,
-              rgba(31, 95, 208, .55) 96%,
+              var(--scan-soft) 55%,
+              var(--scan-firm) 96%,
               transparent);
 }
 .demo.is-scanning .demo__scanline {
@@ -423,17 +485,17 @@ code {
   border-radius: 4px;
 }
 
-/* --- Светофор --- */
+/* --- Светофор. Светофор и подпись — одна карточка: .light верх, .light__caption низ. --- */
 .light {
   display: flex;
   align-items: center;
-  gap: 10px;
-  width: fit-content;
+  gap: 9px;
   margin: 0 18px;
-  padding: 9px 12px;
+  padding: 16px 16px 0;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
+  border-bottom: 0;
+  border-radius: 14px 14px 0 0;
 }
 .light__dot {
   width: 14px;
@@ -446,28 +508,51 @@ code {
 /* Активная точка: цвет + ореол, чтобы неактивное состояние читалось однозначно. */
 .light[data-verdict="red"] .light__dot--red {
   background: var(--red);
-  box-shadow: 0 0 0 4px rgba(194, 53, 42, .18);
+  box-shadow: 0 0 0 4px var(--halo-red);
 }
 .light[data-verdict="yellow"] .light__dot--yellow {
   background: var(--yellow);
-  box-shadow: 0 0 0 4px rgba(217, 155, 26, .2);
+  box-shadow: 0 0 0 4px var(--halo-yellow);
 }
 .light[data-verdict="green"] .light__dot--green {
   background: var(--green);
-  box-shadow: 0 0 0 4px rgba(31, 122, 77, .18);
+  box-shadow: 0 0 0 4px var(--halo-green);
 }
 
 .light__caption {
-  margin: 12px 18px 14px;
-  font: 650 15.5px/1.35 var(--sans);
-  letter-spacing: -.012em;
+  margin: 0 18px 14px;
+  padding: 12px 16px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 0;
+  border-radius: 0 0 14px 14px;
+  font-size: 20px;
+  font-weight: 680;
+  line-height: 1.25;
+  letter-spacing: -.02em;
   color: var(--text);
 }
 /* idle: demo.js ставит пустую строку. Заполняем через CSS, чтобы не трогать разметку. */
 .light__caption:empty::before {
   content: "Not checked yet";
   color: var(--text-faint);
-  font-weight: 500;
+}
+
+/* Тон карточки идёт от вердикта — единственное место, где сигнал заливает площадь. */
+.light[data-verdict="red"],
+.light[data-verdict="red"] ~ .light__caption {
+  background: var(--red-tint);
+  border-color: var(--red-edge);
+}
+.light[data-verdict="yellow"],
+.light[data-verdict="yellow"] ~ .light__caption {
+  background: var(--yellow-tint);
+  border-color: var(--yellow-edge);
+}
+.light[data-verdict="green"],
+.light[data-verdict="green"] ~ .light__caption {
+  background: var(--green-tint);
+  border-color: var(--green-edge);
 }
 .light[data-verdict="red"] ~ .light__caption { color: var(--red-text); }
 .light[data-verdict="yellow"] ~ .light__caption { color: var(--yellow-text); }
@@ -477,7 +562,7 @@ code {
 .demo__actions {
   display: grid;
   gap: 8px;
-  margin: 0 18px;
+  margin: 14px 18px 0;
 }
 .demo__actions .button { width: 100%; }
 /* display у .button перебивает браузерное [hidden] — гасим явно, как у остальных скрытых блоков. */
@@ -503,10 +588,22 @@ code {
 .issues {
   list-style: none;
   padding: 0;
-  margin: 14px 18px 0;
+  margin: 18px 18px 0;
   display: grid;
   gap: 8px;
 }
+/* Заголовок списка появляется вместе с карточками — в idle список пуст. */
+.issues:not(:empty)::before {
+  content: "What to fix";
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 2px;
+}
+/* Чинить нечего — заголовок «What to fix» над строкой «всё чисто» противоречил бы ей. */
+.issues:has(.issue--clear)::before { content: none; }
 
 .issue {
   background: var(--surface);
@@ -528,7 +625,7 @@ code {
   border-left-color: var(--green);
   background: var(--surface-sunken);
 }
-.issue.is-fixed .issue__icon    { color: var(--green); }
+.issue.is-fixed .issue__icon    { color: var(--green-text); }
 .issue.is-fixed .issue__category{ color: var(--green-text); }
 .issue.is-fixed .issue__title   { color: var(--text-soft); }
 
@@ -542,10 +639,11 @@ code {
   font-size: 13.5px;
   color: var(--green-text);
 }
-.issue--clear .issue__icon { color: var(--green); }
+.issue--clear .issue__icon { color: var(--green-text); }
 
 .issue__head {
   display: flex;
+  color: inherit;
   align-items: flex-start;
   gap: 11px;
   width: 100%;
@@ -567,7 +665,7 @@ code {
   line-height: 1.35;
   color: var(--text-soft);
 }
-.issue--critical .issue__icon { color: var(--red); }
+.issue--critical .issue__icon { color: var(--red-text); }
 .issue--warning  .issue__icon { color: var(--yellow-text); }
 
 .issue__titles { flex: 1; min-width: 0; }
@@ -597,12 +695,13 @@ code {
 .issue__body { padding: 0 14px 14px 44px; }
 .issue__detail { font-size: 13px; color: var(--text-soft); margin: 0 0 9px; max-width: 60ch; }
 
-/* Fix — единственное место, где акцент появляется внутри карточки проблемы. */
+/* Fix — единственное место, где акцент появляется внутри карточки проблемы.
+   Кант и метка тёмные, а не зелёные: --accent как текст на светлом даёт 2.3:1. */
 .issue__fix {
   font-size: 13px;
   margin: 0;
   background: var(--accent-soft);
-  border-left: 2px solid var(--accent);
+  border-left: 2px solid var(--text);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   padding: 9px 11px;
   max-width: 60ch;
@@ -612,7 +711,7 @@ code {
   font: 700 10.5px/1 var(--sans);
   letter-spacing: .14em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--text);
   margin-bottom: 4px;
 }
 .issue__fix-text { margin: 0; }
@@ -623,7 +722,7 @@ code {
   padding: 8px 12px;
   min-height: 34px;
   background: var(--accent);
-  color: var(--text-invert);
+  color: var(--accent-ink);
   border: 1px solid var(--accent);
   border-radius: var(--radius-sm);
   font: 650 12.5px/1 var(--sans);
@@ -674,7 +773,7 @@ code {
   overflow-y: auto;
 }
 .modal[hidden] { display: none; }
-.modal__backdrop { position: absolute; inset: 0; background: rgba(16, 26, 38, .58); }
+.modal__backdrop { position: absolute; inset: 0; background: rgba(17, 24, 39, .58); }
 
 .modal__dialog {
   position: relative;
@@ -733,7 +832,7 @@ code {
 }
 .lead__input[aria-invalid="true"] {
   border-color: var(--red);
-  box-shadow: 0 0 0 3px rgba(194, 53, 42, .14);
+  box-shadow: 0 0 0 3px var(--tint-red);
 }
 
 /* Ошибка живёт под полем; иконка на случай, если цвет не различается. */
@@ -775,7 +874,7 @@ code {
   height: 19px;
   border-radius: 50%;
   background: var(--green);
-  color: var(--text-invert);
+  color: var(--accent-ink);
   font-size: 11px;
 }
 
@@ -796,7 +895,7 @@ code {
   gap: 16px;
   flex-wrap: wrap;
   padding: 14px 16px;
-  background: var(--text);
+  background: var(--dark);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-modal);
 }
@@ -810,6 +909,7 @@ code {
   color: var(--paper);
 }
 .cookie__text a { color: var(--accent-dim); }
+.cookie .button--primary { color: var(--accent-ink); }
 .cookie__actions { display: flex; gap: 8px; }
 .cookie .button { padding: 9px 14px; font-size: 13px; min-height: 38px; }
 .cookie .button--ghost {
@@ -884,10 +984,10 @@ code {
 .sticky__error[hidden] { display: none; }
 .sticky__error::before { content: "⚠"; flex: none; }
 
+/* Крестик — обычный элемент строки: абсолютный ложился поверх кнопки отправки. */
 .sticky__close {
-  position: absolute;
-  top: -6px;
-  right: 0;
+  flex: none;
+  align-self: center;
   width: 28px;
   height: 28px;
   font-size: 15px;
@@ -904,7 +1004,7 @@ code {
 .sticky.is-sent .sticky__note { display: none; }
 .sticky.is-sent .sticky__title::before {
   content: "✓ ";
-  color: var(--green);
+  color: var(--green-text);
 }
 
 /* ============================================================
@@ -947,15 +1047,19 @@ code {
   .modal { padding: 12px; align-items: start; }
   .modal__dialog { padding: 22px 20px; }
   .price__amount { font-size: 38px; }
+  .light__caption { font-size: 18px; }
 
   .cookie { left: 10px; right: 10px; bottom: 10px; padding: 13px 14px; }
   .cookie__actions { width: 100%; }
   .cookie .button { flex: 1; }
 
-  /* Мобильная полоса: подпись скрыта, поле и кнопка на всю ширину. */
+  /* Мобильная полоса: подпись скрыта, поле и кнопка на всю ширину.
+     Крестик здесь снова абсолютный — в потоке он занял бы отдельную строку,
+     а место под него уже зарезервировано отступом .sticky__copy. */
   .sticky__inner { gap: 10px; padding-block: 12px 14px; }
   .sticky__note { display: none; }
   .sticky__copy { flex: 1 0 100%; padding-right: 30px; }
+  .sticky__close { position: absolute; top: 10px; right: 0; }
   .sticky__form { flex: 1 0 100%; flex-wrap: wrap; }
   .sticky__input { flex: 1 0 100%; }
   .sticky__form .button { width: 100%; }
