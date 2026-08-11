@@ -8,13 +8,8 @@
 
   function initCookieBanner() {
     var banner = document.querySelector('[data-cookie-banner]');
-    if (!banner) {
-      return;
-    }
-
-    if (window.Analytics.consentState()) {
-      /* Решение уже есть: при granted поднимаем gtag, при denied не делаем ничего. */
-      window.Analytics.loadGtag();
+    /* Решение из прошлого визита gtag уже получил при загрузке — спрашивать снова незачем. */
+    if (!banner || window.Analytics.consentState()) {
       return;
     }
 
@@ -31,6 +26,9 @@
   function init() {
     /* Атрибуцию снимаем до всего остального: она нужна и на privacy/terms. */
     window.Analytics.captureAttribution();
+    /* Тег поднимается всегда и раньше баннера — с флагами denied внутри. Здесь, а не в
+       initCookieBanner: на privacy/terms баннера в разметке нет, а события оттуда идут. */
+    window.Analytics.loadGtag();
     initCookieBanner();
 
     if (window.Hero) {

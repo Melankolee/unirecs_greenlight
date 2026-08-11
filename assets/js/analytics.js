@@ -1,10 +1,22 @@
 /*
- * Аналитика и согласие.
+ * Аналитика и согласие — Google Consent Mode v2.
  *
  * Правила:
  *  - все события идут через track(), он сам добавляет product;
- *  - без согласия gtag не грузится вообще, события не буферизуются;
+ *  - тег грузится всегда, согласие передаётся ему флагами, а не фактом загрузки;
  *  - имена email_submit и price_cta_click импортируются в Google Ads как конверсии — не переименовывать.
+ *
+ * Почему тег грузится до ответа на баннер. Отказавшийся от cookie человек всё равно
+ * приходит по объявлению и всё равно оставляет email. Если не грузить тег, эта конверсия
+ * не существует ни в каком виде: Ads считает связку «объявление → лид» слабее, чем она есть,
+ * и режет показы по заниженной оценке. С флагами denied тег не пишет cookie и не шлёт
+ * идентификаторы — уходит только обезличенный пинг, из которого Google достраивает
+ * статистическую оценку числа конверсий (conversion modeling).
+ *
+ * Флаги denied по умолчанию — обязательная часть, а не перестраховка: тег, загруженный
+ * без них, поставит cookie отказавшемуся. Это нарушение GDPR и повод заблокировать
+ * рекламный аккаунт. Порядок здесь важен — 'consent default' выставляется до вставки
+ * скрипта, иначе тег успеет отработать с настройками по умолчанию, а они разрешающие.
  */
 
 window.Analytics = (function () {
@@ -29,13 +41,30 @@ window.Analytics = (function () {
     } catch (e) {
       /* приватный режим — считаем решение действующим только на эту загрузку */
     }
-    if (value === 'granted') {
-      loadGtag();
-    }
+    applyConsent(value);
   }
 
   function hasConsent() {
     return consentState() === 'granted';
+  }
+
+  /* Сигналы согласия. ad_user_data и ad_personalization добавлены в v2: без них
+     Google для трафика из ЕЭЗ и Великобритании отключает ремаркетинг и часть отчётов. */
+  function consentSignals(value) {
+    var state = value === 'granted' ? 'granted' : 'denied';
+    return {
+      ad_storage: state,
+      ad_user_data: state,
+      ad_personalization: state,
+      analytics_storage: state
+    };
+  }
+
+  function applyConsent(value) {
+    if (typeof window.gtag !== 'function') {
+      return;
+    }
+    window.gtag('consent', 'update', consentSignals(value));
   }
 
   function loadGtag() {
@@ -49,6 +78,17 @@ window.Analytics = (function () {
       window.dataLayer.push(arguments);
     };
 
+    /* До вставки скрипта: иначе тег стартует с разрешающими настройками. */
+    window.gtag('consent', 'default', consentSignals('denied'));
+
+    /* При denied вырезает рекламные идентификаторы из самих пингов — пинг остаётся
+       обезличенным, даже если человек пришёл по объявлению с gclid в ссылке. */
+    window.gtag('set', 'ads_data_redaction', true);
+    /* Без cookie связать клик по объявлению с конверсией нечем, поэтому gclid
+       переносится между страницами через URL. Иначе переход на privacy и обратно
+       обрывает атрибуцию отказавшимся. */
+    window.gtag('set', 'url_passthrough', true);
+
     var script = document.createElement('script');
     script.async = true;
     script.src = 'https://www.googletagmanager.com/gtag/js?id=' +
@@ -57,6 +97,12 @@ window.Analytics = (function () {
 
     window.gtag('js', new Date());
     window.gtag('config', config.gaMeasurementId);
+
+    /* Решение из прошлого визита. Баннер в этом случае не показывается и setConsent
+       никто не вызовет, поэтому granted надо поднять здесь. */
+    if (consentState()) {
+      applyConsent(consentState());
+    }
   }
 
   /* Атрибуция читается один раз при загрузке и живёт в sessionStorage:
@@ -92,13 +138,17 @@ window.Analytics = (function () {
     }
   }
 
+  /* Событие уходит независимо от согласия — отсеивать их здесь нельзя. Что именно
+     доедет до Google, решают флаги: при granted это обычное событие с идентификаторами,
+     при denied — обезличенный пинг. Ранний выход по hasConsent() убил бы именно пинги,
+     то есть весь смысл постоянной загрузки тега. */
   function track(name, params) {
     var payload = Object.assign({ product: config.product }, params || {});
 
     if (config.debug) {
-      console.log('[track]', name, payload, hasConsent() ? '' : '(no consent — not sent)');
+      console.log('[track]', name, payload, hasConsent() ? '' : '(no consent — cookieless ping)');
     }
-    if (!hasConsent() || typeof window.gtag !== 'function') {
+    if (typeof window.gtag !== 'function') {
       return;
     }
     window.gtag('event', name, payload);
