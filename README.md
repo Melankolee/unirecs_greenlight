@@ -81,6 +81,12 @@ examples/*.txt          тексты для прогона
 `/var/lib/presend/leads.jsonl`. API на том же домене, поэтому `apiEndpoint` в конфиге остаётся
 `/api/lead` и фронт для прода не правится.
 
+Выкатка автоматическая: push в `main` → [GitHub Actions](.github/workflows/deploy.yml) обновляет
+код на сервере. Руками остаются только nginx-конфиг и systemd-юнит — почему, написано там же.
+
+Забрать собранные адреса: `sudo node /opt/presend/server/export-leads.js` — кладёт рядом
+`emails.txt` (уникальные адреса для рассыльщика) и `leads.csv` (с атрибуцией).
+
 ## Перед запуском рекламы
 
 - [ ] `assets/js/config.js`: заполнить `gaMeasurementId` (`apiEndpoint` менять не нужно)

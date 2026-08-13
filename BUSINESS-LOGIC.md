@@ -481,6 +481,7 @@ assets/js/app.js        сборка: cookie-баннер, CTA, инициали
 
 ```
 server/lead-api.js          обработчик POST /api/lead, лиды в JSONL, rate limit
+server/export-leads.js      выгрузка лидов в emails.txt и leads.csv
 server/presend-lead.service юнит systemd
 server/nginx-presend.conf   пример nginx: статика + проксирование /api/lead
 server/README.md            установка, проверка после деплоя, выгрузка списка

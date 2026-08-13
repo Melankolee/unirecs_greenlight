@@ -1,0 +1,60 @@
+name: Deploy
+
+# Выкатка на бой: заходим по SSH и приводим /opt/presend к состоянию origin/main.
+# Собирать нечего — статика и обработчик едут как есть, поэтому checkout здесь не нужен.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Два пуша подряд не должны выкатываться параллельно: побеждает последний.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ключ и known_hosts
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: git pull на сервере
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ vars.SSH_PORT || 22 }}
+        run: |
+          ssh -i ~/.ssh/id_deploy -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" bash -euo pipefail <<'REMOTE'
+            cd /opt/presend
+            before=$(git rev-parse HEAD)
+            git fetch --quiet origin main
+            # reset, а не merge: рабочая копия на сервере не редактируется — она обязана
+            # совпадать с origin/main, иначе однажды деплой встанет на конфликте.
+            git reset --hard --quiet origin/main
+            after=$(git rev-parse HEAD)
+
+            echo "было:  $before"
+            echo "стало: $after"
+
+            # Статику nginx отдаёт с диска — перезапускать её не нужно. Сервис трогаем,
+            # только если приехал его код: лишний рестарт роняет открытые запросы.
+            if [ "$before" = "$after" ] || git diff --quiet "$before" "$after" -- server/lead-api.js; then
+              echo "lead-api.js не менялся, рестарт не нужен"
+            else
+              sudo /usr/bin/systemctl restart presend-lead
+              echo "presend-lead перезапущен"
+            fi
+
+            systemctl is-active presend-lead
+            git log -1 --oneline
+          REMOTE
