@@ -724,6 +724,20 @@ code {
 
 .demo__hint { font-size: 12.5px; color: var(--text-faint); margin: 12px 18px 0; }
 
+/* CTA отделён линией: это шаг из демо наружу, а не ещё одно действие над результатом.
+   Появляется только в done — в разметке лежит скрытым (demo.js). */
+.demo__cta {
+  margin: 20px 18px 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.demo__cta-text {
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-soft);
+}
+
 /* --- Карточки проблем. Разметка — issueCardHtml() в demo.js. --- */
 .issues {
   list-style: none;

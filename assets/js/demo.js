@@ -68,6 +68,7 @@ window.Demo = (function () {
     el.caption = el.root.querySelector('[data-demo-caption]');
     el.issues = el.root.querySelector('[data-demo-issues]');
     el.panelHint = el.root.querySelector('[data-demo-hint]');
+    el.cta = el.root.querySelector('[data-demo-cta]');
 
     if (config.debug) {
       var problems = window.validateDemoData(window.DEMO_EXAMPLES);
@@ -174,6 +175,8 @@ window.Demo = (function () {
     el.root.classList.add('is-scanning');
     el.issues.innerHTML = '';
     el.panelHint.hidden = true;
+    /* На повторном прогоне CTA уходит вместе с результатом: панель на время скана пуста. */
+    el.cta.hidden = true;
     setLight(null, '');
     renderText([]);
     updateActions();
@@ -200,6 +203,7 @@ window.Demo = (function () {
     el.runButton.disabled = false;
     el.runButton.textContent = 'Run again';
     el.panelHint.hidden = activeIssues().length === 0;
+    el.cta.hidden = false;
 
     if (window.matchMedia('(max-width: 899px)').matches) {
       el.light.scrollIntoView({
@@ -415,6 +419,7 @@ window.Demo = (function () {
     el.runButton.disabled = false;
     el.runButton.textContent = 'Check before sending';
     el.panelHint.hidden = true;
+    el.cta.hidden = true;
     updateActions();
   }
 
