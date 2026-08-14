@@ -434,7 +434,9 @@ code {
 }
 .footer__inner { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .footer__brand { font-weight: 650; margin: 0; }
-.footer__links { display: flex; gap: 20px; font-size: 15px; }
+/* Юрлицо — обязательная строка для модерации Ads, но не должна спорить с брендом. */
+.footer__legal { color: var(--text-soft); font-size: 13.5px; margin: 4px 0 0; }
+.footer__links { display: flex; gap: 20px; font-size: 15px; flex-wrap: wrap; }
 
 /* ============================================================
    ДЕМО — главный блок страницы, весь визуальный акцент здесь
