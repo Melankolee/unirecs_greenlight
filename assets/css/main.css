@@ -1003,13 +1003,8 @@ code {
 
 .lead__legal { font-size: 11.5px; color: var(--text-faint); margin: 12px 0 0; line-height: 1.55; }
 
-.price__amount {
-  font: 680 44px/1 var(--sans);
-  letter-spacing: -.035em;
-  margin: 14px 0 12px;
-}
-.price__period { font-size: 15px; font-weight: 500; color: var(--text-soft); letter-spacing: 0; }
-.price__done {
+/* Экран подтверждения после отправки email. */
+.done__note {
   display: flex;
   gap: 9px;
   margin: 12px 0 0;
@@ -1017,8 +1012,7 @@ code {
   color: var(--text);
   line-height: 1.55;
 }
-.price__done[hidden] { display: none; }
-.price__done::before {
+.done__note::before {
   content: "✓";
   flex: none;
   display: inline-flex;
@@ -1205,7 +1199,6 @@ code {
   .hero__title { font-size: clamp(30px, 8vw, 38px); }
   .modal { padding: 12px; align-items: start; }
   .modal__dialog { padding: 22px 20px; }
-  .price__amount { font-size: 38px; }
   .light__caption { font-size: 18px; }
 
   .cookie { left: 10px; right: 10px; bottom: 10px; padding: 13px 14px; }

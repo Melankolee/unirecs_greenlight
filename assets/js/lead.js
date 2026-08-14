@@ -1,8 +1,8 @@
 /*
- * Модалка сбора email → экран цены.
+ * Модалка сбора email → экран подтверждения.
  *
- * Обе целевые метрики живут здесь: email_submit и price_cta_click.
- * Экран цены показывается в той же модалке вместо формы — переход на новую страницу теряет людей.
+ * Целевая метрика email_submit живёт здесь.
+ * Подтверждение показывается в той же модалке вместо формы — переход на новую страницу теряет людей.
  */
 
 window.Lead = (function () {
@@ -25,12 +25,10 @@ window.Lead = (function () {
     el.error = el.modal.querySelector('[data-lead-error]');
     el.submit = el.modal.querySelector('[data-lead-submit]');
     el.formView = el.modal.querySelector('[data-view="form"]');
-    el.priceView = el.modal.querySelector('[data-view="price"]');
-    el.priceButton = el.modal.querySelector('[data-price-cta]');
-    el.priceDone = el.modal.querySelector('[data-price-done]');
+    el.doneView = el.modal.querySelector('[data-view="done"]');
+    el.close = el.modal.querySelector('button[data-modal-close]');
 
     el.form.addEventListener('submit', onSubmit);
-    el.priceButton.addEventListener('click', onPriceClick);
     el.input.addEventListener('input', clearError);
 
     el.modal.addEventListener('click', function (event) {
@@ -102,7 +100,7 @@ window.Lead = (function () {
 
   function showView(name) {
     el.formView.hidden = name !== 'form';
-    el.priceView.hidden = name !== 'price';
+    el.doneView.hidden = name !== 'done';
   }
 
   /* --- Валидация -------------------------------------------------------- */
@@ -185,9 +183,10 @@ window.Lead = (function () {
         }
         /* Событие только на успехе: ошибка сети не должна попадать в конверсии. */
         track('email_submit');
-        showView('price');
-        track('price_screen_view');
-        el.priceButton.focus();
+        showView('done');
+        track('success_screen_view');
+        /* Кнопок на экране больше нет — фокус уводим на крестик, чтобы Tab не улетал из модалки. */
+        el.close.focus();
       })
       .catch(function (err) {
         if (config.debug) {
@@ -235,14 +234,6 @@ window.Lead = (function () {
     sending = value;
     el.submit.disabled = value;
     el.submit.textContent = value ? 'Sending…' : 'Get early access';
-  }
-
-  /* --- Экран цены ------------------------------------------------------- */
-
-  function onPriceClick() {
-    track('price_cta_click');
-    el.priceButton.disabled = true;
-    el.priceDone.hidden = false;
   }
 
   return { init: init, open: open, close: close, validateEmail: validateEmail };

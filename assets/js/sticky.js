@@ -47,7 +47,7 @@ window.Sticky = (function () {
     el.title = el.root.querySelector('[data-sticky-title]');
     el.close = el.root.querySelector('[data-sticky-close]');
     el.modal = document.querySelector('[data-modal]');
-    el.priceView = document.querySelector('[data-view="price"]');
+    el.doneView = document.querySelector('[data-view="done"]');
 
     state.closed = flag(CLOSED_KEY);
     state.sent = flag(SENT_KEY);
@@ -120,7 +120,7 @@ window.Sticky = (function () {
 
   /*
    * Модалку слушаем через атрибут hidden: lead.js о полосе не знает и событий не шлёт.
-   * Тот же наблюдатель ловит появление экрана цены — значит email уже отправлен
+   * Тот же наблюдатель ловит появление экрана подтверждения — значит email уже отправлен
    * и полоса в этой сессии больше не нужна.
    */
   function watchModal() {
@@ -130,7 +130,7 @@ window.Sticky = (function () {
 
     new MutationObserver(function () {
       state.modalOpen = !el.modal.hidden;
-      if (el.priceView && !el.priceView.hidden) {
+      if (el.doneView && !el.doneView.hidden) {
         markSent();
       }
       update();

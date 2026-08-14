@@ -303,7 +303,7 @@
   </div>
 </footer>
 
-<!-- ==================== MODAL: email → price ==================== -->
+<!-- ==================== MODAL: email → подтверждение ==================== -->
 <div class="modal" data-modal hidden>
   <div class="modal__backdrop" data-modal-close></div>
 
@@ -334,20 +334,13 @@
       </form>
     </div>
 
-    <!-- Состояние 2: экран цены. Вторая целевая метрика. -->
-    <div data-view="price" hidden>
+    <!-- Состояние 2: подтверждение отправки. -->
+    <div data-view="done" hidden>
       <h2 class="modal__title">You're on the list</h2>
-      <p class="price__amount">$12<span class="price__period">/month</span></p>
       <p class="modal__text">
-        Early-bird: the first users get their first 3 months at half price. No card now — we'll
-        send the link before launch.
+        We'll email you when access opens — one email, nothing else.
       </p>
-      <button type="button" class="button button--primary button--full" data-price-cta>
-        Lock in early-bird price
-      </button>
-      <p class="price__done" data-price-done hidden>
-        Thanks — you're on the list. We'll email you before launch.
-      </p>
+      <p class="done__note">Nothing else to do now.</p>
     </div>
   </div>
 </div>

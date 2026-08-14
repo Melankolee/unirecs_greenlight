@@ -15,7 +15,7 @@ node tools/dev-server.js        # → http://localhost:8000
 
 Сервер раздаёт статику и мокает `POST /api/lead` → `200 {ok:true}`, лиды пишет в
 `tools/leads.log`. Без этого эндпоинта воронку не прогнать: submit падает в ветку ошибки, и
-события `email_submit` / `price_cta_click` не проверить.
+событие `email_submit` не проверить.
 
 Ветка ошибки проверяется параметром в URL страницы (работает только при `config.debug`):
 
