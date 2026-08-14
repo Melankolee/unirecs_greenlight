@@ -1,0 +1,10 @@
+# Открыто всё: закрывать нечего, а служебные каталоги репозитория nginx и так отдаёт
+# как 404 (location ~ ^/(server|tools|examples|\.git)/ в server/nginx-presend.conf).
+# Перечислять их здесь нельзя: robots.txt публичный, это была бы карта того, что прятали.
+# privacy.html и terms.html закрыты метатегом noindex в самих страницах — так надёжнее:
+# запрет в robots.txt мешает краулеру прочитать сам noindex.
+User-agent: *
+Allow: /
+
+# Абсолютный URL обязателен: относительный путь к карте краулер не берёт.
+Sitemap: https://presend.anytoolai.store/sitemap.xml

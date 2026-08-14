@@ -40,7 +40,7 @@ sudo ln -s /etc/nginx/sites-available/presend /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 
 # 5. Сертификат
-sudo certbot --nginx -d example.com -d www.example.com
+sudo certbot --nginx -d presend.anytoolai.store
 ```
 
 Требуется Node 18+ (используется только стандартная библиотека). Проверить: `node --version`.
@@ -114,7 +114,7 @@ curl -s -X POST localhost:8787/api/lead \
 # → {"ok":true}
 
 # снаружи — через nginx и TLS
-curl -s -X POST https://example.com/api/lead \
+curl -s -X POST https://presend.anytoolai.store/api/lead \
   -H 'Content-Type: application/json' \
   -d '{"email":"check@example.com","product":"presend","landing_path":"/"}'
 

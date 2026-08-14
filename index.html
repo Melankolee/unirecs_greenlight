@@ -4,19 +4,65 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- TODO: финальные метатеги перед запуском рекламы (раздел 6 BUSINESS-LOGIC.md) -->
+  <!-- Домен здесь прописан целиком и намеренно: canonical, og:url, og:image и <loc> в
+       карте сайта краулеры принимают только абсолютными, относительные молча игнорируют.
+       Меняется домен — правится ещё и robots.txt, sitemap.xml, nginx-конфиг (см. README). -->
   <title>Pre-Send Check — catch what kills your proposal before you send it</title>
   <meta name="description" content="A Chrome extension that checks your freelance proposal before you send it: unreplaced placeholders, AI clichés, and phrases that break platform rules.">
+  <link rel="canonical" href="https://presend.anytoolai.store/">
+  <!-- max-image-preview:large — без него Google режет og-картинку до миниатюры в выдаче. -->
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#111827">
 
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Pre-Send Check">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://presend.anytoolai.store/">
   <meta property="og:title" content="Pre-Send Check — green light before you send">
   <meta property="og:description" content="Catch unreplaced placeholders, AI clichés, and platform-rule risks before the client sees them.">
-  <!-- TODO: og:image 1200×630 webp, og:url -->
+  <meta property="og:image" content="https://presend.anytoolai.store/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A traffic light on green beside the headline “Get a green light before you hit send”.">
+  <meta name="twitter:card" content="summary_large_image">
 
-  <link rel="icon" href="data:,"><!-- TODO: favicon -->
+  <!-- SVG-иконка одна на все размеры; PNG нужен только iOS, он svg в закладке не берёт. -->
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="stylesheet" href="assets/css/main.css">
+
+  <!-- Разметка для выдачи. Ни цены, ни оценок здесь нет намеренно: продукт не запущен,
+       а offers/aggregateRating на несуществующий товар — повод для ручной санкции. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://presend.anytoolai.store/#website",
+        "url": "https://presend.anytoolai.store/",
+        "name": "Pre-Send Check",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Pre-Send Check",
+        "url": "https://presend.anytoolai.store/",
+        "image": "https://presend.anytoolai.store/assets/og.png",
+        "applicationCategory": "BrowserApplication",
+        "operatingSystem": "Chrome",
+        "description": "A Chrome extension that checks a freelance proposal before it is sent: unreplaced placeholders, AI clichés, and phrases that break marketplace rules.",
+        "isPartOf": { "@id": "https://presend.anytoolai.store/#website" }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
+
+<!-- Содержимое страницы в <main>: за его пределами остаются только модалка, баннер
+     и липкая полоса — они не часть документа, и поисковику их читать незачем. -->
+<main>
 
 <!-- ==================== 1. HERO ==================== -->
 <header class="hero">
@@ -291,6 +337,8 @@
     </button>
   </div>
 </section>
+
+</main>
 
 <!-- ==================== 7. FOOTER ==================== -->
 <footer class="footer">

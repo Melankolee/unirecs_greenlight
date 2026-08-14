@@ -5,15 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Privacy notice — Pre-Send Check</title>
   <meta name="description" content="How Pre-Send Check handles the email address you leave on the waitlist.">
-  <meta name="robots" content="noindex">
-  <link rel="icon" href="data:,">
+  <!-- noindex осознанно: юридический текст в выдаче не нужен, но страница обязана быть
+       открытой и залинкованной — иначе модерация Google Ads её не увидит. В sitemap.xml
+       по той же причине не входит. -->
+  <meta name="robots" content="noindex, follow">
+  <meta name="theme-color" content="#111827">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
 
 <section class="section legal">
   <div class="container" style="max-width: 720px;">
-    <p class="eyebrow"><a href="index.html">← Pre-Send Check</a></p>
+    <p class="eyebrow"><a href="/">← Pre-Send Check</a></p>
     <h1>Privacy notice</h1>
     <p class="section__lead">Last updated: <!-- TODO: дата публикации --> —</p>
 
@@ -54,7 +59,7 @@
 
 <footer class="footer">
   <div class="container footer__inner">
-    <p class="footer__brand"><a href="index.html">Pre-Send Check</a></p>
+    <p class="footer__brand"><a href="/">Pre-Send Check</a></p>
     <nav class="footer__links">
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>

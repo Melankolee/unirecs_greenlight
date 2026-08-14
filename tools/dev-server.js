@@ -36,7 +36,10 @@ const MIME = {
   '.png': 'image/png',
   '.webp': 'image/webp',
   '.ico': 'image/x-icon',
-  '.txt': 'text/plain; charset=utf-8'
+  '.txt': 'text/plain; charset=utf-8',
+  // Карта сайта. Без этой строки уходит application/octet-stream, и проверить sitemap
+  // локально нельзя: браузер предлагает скачать файл вместо того, чтобы показать.
+  '.xml': 'application/xml; charset=utf-8'
 };
 
 const server = http.createServer(function (req, res) {

@@ -55,12 +55,17 @@ node tools/check.js examples/my-proposal.txt --json     # готовый объ�
 index.html              лендинг: hero, демо, категории, как работает, для кого, CTA, футер
 privacy.html            каркас, юридический текст — TODO
 terms.html              каркас, юридический текст — TODO
+robots.txt              открыт весь сайт + ссылка на карту
+sitemap.xml             одна запись: индексируемая страница ровно одна
+assets/favicon.svg      иконка вкладки — светофор, горит зелёная
+assets/apple-touch-icon.png  то же 180×180 для iOS, собирается из favicon.svg
+assets/og.svg, og.png   картинка для шаринга, 1200×630
 assets/css/main.css     токены + все компоненты
 assets/js/config.js     API_ENDPOINT, GA ID, одноразовые домены, тайминги
 assets/js/analytics.js  consent, gtag, track(), utm/gclid, scroll_depth
 assets/js/demo-data.js  три примера предложений + самопроверка
 assets/js/demo.js       демо: состояния, подсветка по match, светофор, исправления по кнопке
-assets/js/lead.js       модалка, валидация, POST /api/lead, экран цены
+assets/js/lead.js       модалка, валидация, POST /api/lead, экран подтверждения
 assets/js/app.js        сборка и инициализация
 
 assets/js/sticky.js     липкая полоса сбора email внизу вьюпорта
@@ -69,6 +74,7 @@ server/lead-api.js      прод-обработчик POST /api/lead (Node, бе
 server/*.service, *.conf systemd + nginx, установка — server/README.md
 
 tools/dev-server.js     статика + мок POST /api/lead
+tools/render-images.js  og.png и apple-touch-icon.png из svg-исходников
 tools/check.js          CLI-прогон текста предложения
 tools/rules.js          правила детекции — только для инструментов, не для лендинга
 examples/*.txt          тексты для прогона
@@ -93,9 +99,44 @@ examples/*.txt          тексты для прогона
 - [x] `/api/lead` на бэкенде, отвечает `200 {ok: true}` — [server/](server/), развернуть по инструкции
 - [x] Consent Mode v2 в `analytics.js` — тег грузится всегда, флаги `denied` до согласия
 - [ ] Юридические тексты в `privacy.html` и `terms.html`
-- [ ] favicon, `og:image`, `og:url` в `index.html`
-- [ ] `email_submit` и `price_cta_click` заведены как конверсии в Google Ads
+- [x] favicon, `og:image`, canonical, `robots.txt`, `sitemap.xml`, schema.org — см. «SEO»
+- [ ] Отдать `sitemap.xml` в Google Search Console
+- [ ] `email_submit` заведён как конверсия в Google Ads
 - [ ] Финальный копирайт (места помечены `TODO copy`)
+
+## SEO
+
+Домен — `presend.anytoolai.store`. Он прописан целиком в четырёх местах: `canonical`,
+`og:url` и `og:image` в [index.html](index.html) (там же внутри schema.org), `Sitemap:` в
+[robots.txt](robots.txt), `<loc>` в [sitemap.xml](sitemap.xml), `server_name` и пути к
+сертификату в [nginx-presend.conf](server/nginx-presend.conf). Сменится домен — править все
+четыре:
+
+```sh
+grep -rl presend.anytoolai.store index.html robots.txt sitemap.xml server/nginx-presend.conf \
+  | xargs perl -pi -e 's/presend\.anytoolai\.store/новый-домен/g'
+```
+
+Относительные URL здесь не годятся: `canonical`, `og:url`, `og:image` и `<loc>` в карте
+краулеры принимают только абсолютными.
+
+Адрес у сайта ровно один — `www`-записи у поддомена нет, склеивать нечего. Появится второй
+адрес — он обязан отдавать 301 на этот, а не копию сайта, иначе поисковик увидит два
+одинаковых сайта, а клики с рекламы поделятся между ними.
+
+**nginx-конфиг деплой не переносит**, его копируют руками ([server/README.md](server/README.md)) —
+на сервере он уже настроен, файл в репозитории с ним просто сверяется.
+
+`privacy.html` и `terms.html` закрыты `noindex` и в карту не входят: юридический текст в
+выдаче не нужен. Открытыми и залинкованными они при этом обязаны остаться — иначе
+модерация Google Ads их не увидит.
+
+Картинку для шаринга и иконку перерисовывать так (исходник — `assets/og.svg`, Chrome берётся
+как рендерер, потому что зависимостей в проекте нет):
+
+```sh
+node tools/render-images.js
+```
 
 ## Правка демо-примеров
 

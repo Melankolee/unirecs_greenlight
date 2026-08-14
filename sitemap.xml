@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Одна запись: индексируемая страница на сайте ровно одна. privacy.html и terms.html
+     помечены noindex, и в карте им не место — противоречивый сигнал краулеру.
+     lastmod правится руками при заметной правке страницы; врать свежей датой на каждый
+     деплой смысла нет — краулер сверяет её с тем, что реально изменилось. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://presend.anytoolai.store/</loc>
+    <lastmod>2026-08-14</lastmod>
+  </url>
+</urlset>
