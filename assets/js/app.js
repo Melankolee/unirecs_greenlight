@@ -8,8 +8,11 @@
 
   function initCookieBanner() {
     var banner = document.querySelector('[data-cookie-banner]');
-    /* Решение из прошлого визита gtag уже получил при загрузке — спрашивать снова незачем. */
-    if (!banner || window.Analytics.consentState()) {
+    /*
+     * Не показываем в двух случаях: спрашивать не обязаны (всё, кроме Европы — там уже
+     * granted с загрузки) или решение из прошлого визита gtag уже получил при загрузке.
+     */
+    if (!banner || !window.Analytics.consentPending()) {
       return;
     }
 
@@ -26,8 +29,9 @@
   function init() {
     /* Атрибуцию снимаем до всего остального: она нужна и на privacy/terms. */
     window.Analytics.captureAttribution();
-    /* Тег поднимается всегда и раньше баннера — с флагами denied внутри. Здесь, а не в
-       initCookieBanner: на privacy/terms баннера в разметке нет, а события оттуда идут. */
+    /* Тег поднимается всегда и раньше баннера — флаги внутри выставляются по региону.
+       Здесь, а не в initCookieBanner: на privacy/terms баннера в разметке нет, а события
+       оттуда идут. */
     window.Analytics.loadGtag();
     initCookieBanner();
 
