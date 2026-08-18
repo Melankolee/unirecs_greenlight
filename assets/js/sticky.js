@@ -61,8 +61,31 @@ window.Sticky = (function () {
     watchModal();
     watchConsent();
     initScrollGate();
+    watchHeight();
 
     update();
+  }
+
+  /*
+   * Футер отодвигается на --sticky-h, но руками эту высоту не удержать: с 600px форма
+   * переносится на вторую строку, а сообщение об ошибке добавляет третью — полоса
+   * вырастает со 104 до 182px и накрывает ссылки Privacy/Terms. Меряем фактическую
+   * высоту и кладём её в переменную, из которой считается отступ футера.
+   */
+  function watchHeight() {
+    if (typeof ResizeObserver === 'function') {
+      new ResizeObserver(syncHeight).observe(el.root);
+    } else {
+      window.addEventListener('resize', syncHeight);
+    }
+    syncHeight();
+  }
+
+  /* Полосы на экране нет — резервировать под неё низ футера незачем. */
+  function syncHeight() {
+    /* offsetHeight, а не rect: полоса приезжает трансформом, у rect он уже учтён. */
+    var height = state.visible ? el.root.offsetHeight : 0;
+    document.documentElement.style.setProperty('--sticky-h', height + 'px');
   }
 
   /* --- Условия показа --------------------------------------------------- */
@@ -87,10 +110,13 @@ window.Sticky = (function () {
       el.root.hidden = false;
       requestAnimationFrame(function () {
         el.root.classList.add('is-visible');
+        syncHeight();
       });
     } else {
       el.root.classList.remove('is-visible');
     }
+
+    syncHeight();
   }
 
   function initScrollGate() {

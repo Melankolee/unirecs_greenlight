@@ -60,6 +60,8 @@ window.Demo = (function () {
 
     el.tabs = el.root.querySelector('[data-demo-tabs]');
     el.text = el.root.querySelector('[data-demo-text]');
+    el.textScroll = el.root.querySelector('[data-demo-scroll]');
+    el.textWrap = el.textScroll.parentNode;
     el.scanline = el.root.querySelector('[data-demo-scanline]');
     el.runButton = el.root.querySelector('[data-demo-run]');
     el.fixErrors = el.root.querySelector('[data-demo-fix-errors]');
@@ -81,6 +83,8 @@ window.Demo = (function () {
     el.fixErrors.addEventListener('click', onFixErrorsClick);
     el.reset.addEventListener('click', onResetClick);
     el.issues.addEventListener('click', onIssueClick);
+    el.textScroll.addEventListener('scroll', syncScrollHints, { passive: true });
+    window.addEventListener('resize', syncScrollHints);
 
     selectExample(window.DEMO_EXAMPLES[0].id, { silent: true });
   }
@@ -320,6 +324,8 @@ window.Demo = (function () {
     html += escapeHtml(text.slice(cursor));
 
     el.text.innerHTML = html;
+    /* Длина текста меняется при смене примера и после фиксов — подсказку пересчитываем. */
+    syncScrollHints();
   }
 
   /* --- Применение исправлений ------------------------------------------- */
@@ -564,6 +570,7 @@ window.Demo = (function () {
     });
 
     highlightOpenIssue();
+    revealActiveMark();
 
     if (willOpen) {
       track('demo_issue_open', { category: issue.category });
@@ -575,6 +582,45 @@ window.Demo = (function () {
     Array.prototype.forEach.call(el.text.querySelectorAll('.hl'), function (mark) {
       mark.classList.toggle('is-active', mark.dataset.issueId === state.openIssueId);
     });
+  }
+
+  /*
+   * Ниже 900px панель разбора стоит под текстом, а сам текст обрезан до 44dvh со своей
+   * прокруткой: подсвеченный фрагмент оказывался и за краем окна, и за краем панели —
+   * тап по карточке визуально не делал ничего.
+   *
+   * Сначала докручиваем панель текста (её прокрутку никакой scrollIntoView не тронет,
+   * пока фрагмент вообще вне её видимой части), затем страницу — block: 'nearest',
+   * то есть на минимум: раскрытая карточка не должна уезжать дальше, чем нужно.
+   */
+  function revealActiveMark() {
+    var mark = el.text.querySelector('.hl.is-active');
+    if (!mark || !window.matchMedia('(max-width: 899px)').matches) {
+      return;
+    }
+
+    var box = el.textScroll;
+    if (box.scrollHeight > box.clientHeight) {
+      var markRect = mark.getBoundingClientRect();
+      var boxRect = box.getBoundingClientRect();
+      box.scrollTop += (markRect.top - boxRect.top) -
+        (boxRect.height - markRect.height) / 2;
+      syncScrollHints();
+    }
+
+    mark.scrollIntoView({
+      behavior: reducedMotion ? 'auto' : 'smooth',
+      block: 'nearest'
+    });
+  }
+
+  /* Градиент у нижнего края панели текста: полос прокрутки на мобиле нет, и без него
+     не видно, что черновик продолжается. Гаснет на последнем экране. */
+  function syncScrollHints() {
+    var box = el.textScroll;
+    var scrollable = box.scrollHeight - box.clientHeight;
+    el.textWrap.classList.toggle('is-scrollable', scrollable > 1);
+    el.textWrap.classList.toggle('is-scrolled-end', box.scrollTop >= scrollable - 1);
   }
 
   /* --- Утилиты ---------------------------------------------------------- */

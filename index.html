@@ -201,8 +201,13 @@
             light up in the draft.
           </p>
         </div>
+        <!-- Прокрутка живёт на внутреннем .demo__text-scroll, а не на обёртке: полоса
+             сканирования абсолютна, и внутри скроллера её top:0 означал бы верх текста,
+             а не верх видимого окна — на прокрученном черновике она уезжала за кадр. -->
         <div class="demo__text-wrap">
-          <pre class="demo__text" data-demo-text></pre>
+          <div class="demo__text-scroll" data-demo-scroll>
+            <pre class="demo__text" data-demo-text></pre>
+          </div>
           <div class="demo__scanline" data-demo-scanline aria-hidden="true"></div>
         </div>
       </div>

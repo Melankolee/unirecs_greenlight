@@ -105,8 +105,11 @@
      Пока файла нет, стек падает на системный шрифт и страница не ждёт загрузки. */
   --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 
-  /* Высота липкой полосы: на неё же отодвигается футер, чтобы ссылки не закрывались. */
-  --sticky-h: 104px;
+  /* Высота липкой полосы: на неё же отодвигается футер, чтобы ссылки не закрывались.
+     Значения здесь — фолбэк на случай, если JS не отработал: полоса переносит форму на
+     вторую строку уже с 600px, а в состоянии ошибки прибавляет ещё строку. Точную высоту
+     ставит sticky.js через --sticky-h на :root — держать её руками не выходит. */
+  --sticky-h: 140px;
 }
 
 * { box-sizing: border-box; }
@@ -436,7 +439,9 @@ code {
 .footer__brand { font-weight: 650; margin: 0; }
 /* Юрлицо — обязательная строка для модерации Ads, но не должна спорить с брендом. */
 .footer__legal { color: var(--text-soft); font-size: 13.5px; margin: 4px 0 0; }
-.footer__links { display: flex; gap: 20px; font-size: 15px; flex-wrap: wrap; }
+.footer__links { display: flex; gap: 4px 20px; font-size: 15px; flex-wrap: wrap; }
+/* Область нажатия 44px. Растёт только высота строки — подчёркивание остаётся по тексту. */
+.footer__links a { display: inline-flex; align-items: center; min-height: 44px; }
 
 /* ============================================================
    ДЕМО — главный блок страницы, весь визуальный акцент здесь
@@ -549,7 +554,26 @@ code {
   padding: 7px 12px;
 }
 
-.demo__text-wrap { position: relative; overflow: hidden; padding: 0 22px; }
+/* Обёртка не скроллит: она — система координат для полосы сканирования и для
+   градиента-подсказки. Прокрутка на .demo__text-scroll ниже. */
+.demo__text-wrap { position: relative; overflow: hidden; }
+.demo__text-scroll { padding: 0 22px; }
+
+/* Край текста, уходящего под обрез: без него на мобиле не видно, что панель прокручивается
+   (полос прокрутки на iOS нет). Гаснет, когда докрутили до конца — demo.js ставит is-scrolled-end. */
+.demo__text-wrap::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+  background: linear-gradient(180deg, transparent, var(--surface));
+}
+.demo__text-wrap.is-scrollable:not(.is-scrolled-end)::after { opacity: 1; }
 
 .demo__text {
   margin: 0;
@@ -560,28 +584,32 @@ code {
   max-width: 68ch;
 }
 
-/* Полоса сканирования: 1.2 с сверху вниз, синхронно с config.scanDurationMs */
+/* Полоса сканирования: 1.2 с сверху вниз, синхронно с config.scanDurationMs.
+
+   Едет background-position, а не transform: элемент растянут на всю обёртку, а
+   translateY(100%) считался бы от его собственных 44px — полоса проезжала 88px у
+   верхнего края и гасла, вместо того чтобы пройти по всему черновику. */
 .demo__scanline {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 44px;
+  inset: 0;
   opacity: 0;
   pointer-events: none;
-  background: linear-gradient(180deg,
+  background-image: linear-gradient(180deg,
               transparent,
               var(--scan-soft) 55%,
               var(--scan-firm) 96%,
               transparent);
+  background-repeat: no-repeat;
+  background-size: 100% 44px;
+  background-position: 0 -44px;
 }
 .demo.is-scanning .demo__scanline {
   opacity: 1;
   animation: scan 1.2s linear;
 }
 @keyframes scan {
-  from { transform: translateY(-44px); }
-  to   { transform: translateY(100%); }
+  from { background-position: 0 -44px; }
+  to   { background-position: 0 calc(100% + 44px); }
 }
 
 /* --- Подсветка фрагментов. Строится в demo.js по полю match.
@@ -590,6 +618,9 @@ code {
   border-radius: 3px;
   padding: 1px 2px;
   cursor: pointer;
+  /* Демо подкручивает страницу к активному фрагменту (revealActiveMark): без запаса
+     block:'nearest' прижимает его вплотную к краю окна. */
+  scroll-margin: 24px;
 }
 .hl--placeholder {
   background: var(--hl-placeholder-bg);
@@ -713,7 +744,11 @@ code {
 /* Сброс — не кнопка по весу: это выход из сценария, а не следующий шаг в нём. */
 .demo__reset {
   justify-self: start;
-  padding: 4px 0;
+  /* inline-flex + min-height, а не padding: подчёркивание должно остаться по тексту. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0;
   background: none;
   border: 0;
   color: var(--text-soft);
@@ -723,6 +758,8 @@ code {
   cursor: pointer;
 }
 .demo__reset:hover { color: var(--text); }
+/* display у .demo__reset перебивает браузерное [hidden] — гасим явно, как у .demo__fix-errors. */
+.demo__reset[hidden] { display: none; }
 
 .demo__hint { font-size: 12.5px; color: var(--text-faint); margin: 12px 18px 0; }
 
@@ -1061,7 +1098,7 @@ code {
 .cookie__text a { color: var(--accent-dim); }
 .cookie .button--primary { color: var(--accent-ink); }
 .cookie__actions { display: flex; gap: 8px; }
-.cookie .button { padding: 9px 14px; font-size: 13px; min-height: 38px; }
+.cookie .button { padding: 9px 14px; font-size: 13px; min-height: 44px; }
 .cookie .button--ghost {
   background: transparent;
   color: var(--paper-deep);
@@ -1120,7 +1157,13 @@ code {
 }
 .sticky__input::placeholder { color: var(--text-faint); }
 .sticky__input:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus); }
-.sticky__input[aria-invalid="true"] { border-color: var(--red); }
+/* Ореол перебиваем вместе с рамкой: иначе :focus выше оставлял зелёный --focus
+   вокруг красного поля. Тот же приём, что у .lead__input в модалке. */
+.sticky__input[aria-invalid="true"],
+.sticky__input[aria-invalid="true"]:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px var(--tint-red);
+}
 
 .sticky__error {
   flex: 1 0 100%;
@@ -1186,16 +1229,22 @@ code {
 
   .demo__window { grid-template-columns: 1fr; }
   .demo__pane--panel { border-left: 0; border-top: 1px solid var(--border); }
-  .demo__text-wrap { max-height: 44vh; overflow-y: auto; }
+  /* dvh, а не vh: на iOS Safari vh считается от большого вьюпорта (адресная строка
+     скрыта), и при видимой строке панель оказывалась выше доступной области.
+     Первая строка — фолбэк для браузеров без dvh. */
+  .demo__text-scroll { max-height: 44vh; overflow-y: auto; }
+  .demo__text-scroll { max-height: 44dvh; }
   .demo__tabs { width: 100%; }
-  .demo__tab { flex: 1; text-align: center; padding-inline: 8px; }
+  .demo__tab { flex: 1; text-align: center; padding-inline: 8px; min-height: 44px; }
 
-  /* Демо скроллит к подписи под светофором: она не должна попадать под полосу. */
-  .demo__pane--panel { scroll-padding-bottom: var(--sticky-h); }
+  /* Демо скроллит к подписи под светофором: она не должна попадать под полосу.
+     Свойство работает только на самом скролл-контейнере, а скроллит здесь документ,
+     не панель, — поэтому правило висит на :root, а не на .demo__pane--panel. */
+  :root { scroll-padding-bottom: calc(var(--sticky-h) + 12px); }
 }
 
 @media (max-width: 599px) {
-  :root { --sticky-h: 132px; }
+  :root { --sticky-h: 156px; }
 
   .container { padding: 0 16px; }
   .hero__title { font-size: clamp(30px, 8vw, 38px); }
