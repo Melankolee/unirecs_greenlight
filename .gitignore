@@ -1,2 +1,5 @@
 tools/leads.log
 .DS_Store
+emails.txt
+leads.csv
+leads.jsonl

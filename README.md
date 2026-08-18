@@ -95,7 +95,7 @@ examples/*.txt          тексты для прогона
 
 ## Перед запуском рекламы
 
-- [ ] `assets/js/config.js`: заполнить `gaMeasurementId` (`apiEndpoint` менять не нужно)
+- [x] `assets/js/config.js`: заполнить `gaMeasurementId` (`apiEndpoint` менять не нужно)
 - [x] `/api/lead` на бэкенде, отвечает `200 {ok: true}` — [server/](server/), развернуть по инструкции
 - [x] Consent Mode v2 в `analytics.js` — тег грузится всегда, флаги `denied` до согласия
 - [ ] Юридические тексты в `privacy.html` и `terms.html`

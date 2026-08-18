@@ -6,8 +6,8 @@ window.PRESEND_CONFIG = {
   // Backend endpoint для сбора email. Ожидается 200 {ok: true}.
   apiEndpoint: '/api/lead',
 
-  // GA4 measurement ID. Пока пусто — gtag не грузится, track() пишет в консоль.
-  gaMeasurementId: '',
+  // GA4 measurement ID. Если пусто — gtag не грузится, track() пишет в консоль.
+  gaMeasurementId: 'G-23SD0FS9D6',
 
   // Ключ, под которым хранится решение по cookie-баннеру.
   consentKey: 'presend_consent',
